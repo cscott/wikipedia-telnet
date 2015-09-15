@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://gist.github.com/fcee762adc52a46761bf.git"
+    "url": "cscott/wikipedia-telnet"
   },
   "keywords": [
     "telnet",
@@ -16,13 +16,8 @@
   ],
   "author": "cscott, atdt",
   "license": "AGPL-3.0",
-  "bugs": {
-    "url": "https://gist.github.com/fcee762adc52a46761bf"
-  },
-  "homepage": "https://gist.github.com/fcee762adc52a46761bf",
+  "homepage": "https://github.com/cscott/wikipedia-telnet",
   "dependencies": {
-    "cheerio": "^0.19.0",
-    "mw-ocg-texter": "^0.3.1",
-    "request": "^2.62.0"
+    "mw-ocg-texter": "^0.3.1"
   }
 }

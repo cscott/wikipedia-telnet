@@ -1,16 +1,12 @@
 // Wikipedia telnet server
 //
 // To install dependencies:
-// npm install request
-// npm install cheerio
 // npm install mw-ocg-texter
 
 var net = require( 'net' );
-var cheerio = require('cheerio');
-var request = require('request');
 var fs = require('fs');
 
-var standalone = require('mw-ocg-texter/lib/standalone');
+var texter = require('mw-ocg-texter/lib/standalone');
 
 var port = 1081;
 // Logo from https://en.wikipedia.org/wiki/ASCII_art, plus some instructions.
@@ -47,7 +43,7 @@ function recv( socket, data ) {
         return;
     }
 
-	standalone.convert({
+	texter.convert({
 		domain: domain,
 		title: data,
 		stream: socket,
