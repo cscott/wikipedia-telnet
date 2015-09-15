@@ -86,5 +86,5 @@ Licensed under AGPLv3.
 [telnet]:        https://en.wikipedia.org/wiki/Telnet
 [Ori Livneh]:    https://github.com/atdt/
 
-[NPM1]: https://nodei.co/npm/wikipedia-telnet.svg
+[NPM1]: https://nodei.co/npm/wikipedia-telnet.png
 [NPM2]: https://nodei.co/npm/wikipedia-telnet/
