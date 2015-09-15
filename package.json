@@ -1,0 +1,28 @@
+{
+  "name": "wikipedia-telnet",
+  "version": "0.0.1",
+  "description": "Wikipedia Telnet Server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gist.github.com/fcee762adc52a46761bf.git"
+  },
+  "keywords": [
+    "telnet",
+    "wikipedia"
+  ],
+  "author": "cscott, atdt",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://gist.github.com/fcee762adc52a46761bf"
+  },
+  "homepage": "https://gist.github.com/fcee762adc52a46761bf",
+  "dependencies": {
+    "cheerio": "^0.19.0",
+    "mw-ocg-texter": "^0.3.1",
+    "request": "^2.62.0"
+  }
+}
