@@ -13,18 +13,26 @@ of Wikipedia content, via the Wikipedia REST API.
 Based on the gist by [Ori Livneh] at https://gist.github.com/atdt/4037228
 
 ## Installation
-Install the node package dependencies with:
+To install the binary, use:
+```
+npm install -g wikipedia-telnet
+```
+
+Or else for local development, install the node package dependencies with:
 ```
 npm install
 ```
+
 ## Running
+
 Start a telnet server on port 1081:
 ```
-$ node index.js 1081
-```
-or:
-```
 $ wikipedia-telnet 1081
+```
+
+If developing locally, use:
+```
+$ node index.js 1081
 ```
 
 Sample session:
