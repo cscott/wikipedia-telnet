@@ -3,6 +3,9 @@
   "version": "0.0.1-git",
   "description": "Wikipedia Telnet Server",
   "main": "index.js",
+  "bin": {
+    "wikipedia-telnet": "./index.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

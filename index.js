@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 // Wikipedia telnet server
 //
 // To install dependencies:
