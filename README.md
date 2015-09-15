@@ -20,7 +20,11 @@ npm install
 ## Running
 Start a telnet server on port 1081:
 ```
-node index.js
+$ node index.js 1081
+```
+or:
+```
+$ wikipedia-telnet 1081
 ```
 
 Sample session:

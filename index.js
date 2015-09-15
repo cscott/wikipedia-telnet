@@ -11,7 +11,7 @@ var path = require( 'path' );
 
 var texter = require('mw-ocg-texter/lib/standalone');
 
-var port = 1081;
+var port = parseInt(process.argv[2]) || 1081;
 // Logo from https://en.wikipedia.org/wiki/ASCII_art, plus some instructions.
 var logo = fs.readFileSync( path.join( __dirname, 'wiki-logo.txt' ) );
 var domain = 'en.wikipedia.org';
