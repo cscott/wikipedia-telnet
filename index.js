@@ -12,8 +12,7 @@ var path = require( 'path' );
 var texter = require('mw-ocg-texter/lib/standalone');
 
 var port = parseInt(process.argv[2]) || 1081;
-// Logo from https://en.wikipedia.org/wiki/ASCII_art, plus some instructions.
-var logo = fs.readFileSync( path.join( __dirname, 'wiki-logo.txt' ) );
+
 var domain = 'en.wikipedia.org';
 var ps1 = '\n>>> ';
 
@@ -29,6 +28,29 @@ var siteinfoCacher = function(bundler, wikis, log) {
 	}
 	return cachedSiteinfo[key];
 };
+
+// Attempt to render welcome message from :en:User:cscott/Telnet,
+// but fall back to the contents of wiki-logo.txt if there is a
+// problem.
+var logoP = (function() {
+	var cachedLogo = '';
+	return texter.convert({
+		domain: 'en.wikipedia.org',
+		title: 'User:cscott/Telnet',
+		siteinfo: siteinfoCacher,
+		stream: {
+			write: function(chunk, cb) {
+				cachedLogo += chunk.toString();
+				return cb();
+			}
+		}
+	}).then(function() {
+		// Remove initial "title" line from output.
+		return cachedLogo.replace(/^\S+[\n\r]+/, '');
+	});
+})().catch(function() {
+	return fs.readFileSync( path.join( __dirname, 'wiki-logo.txt' ) );
+});
 
 function recv( socket, data ) {
 
@@ -61,7 +83,9 @@ function recv( socket, data ) {
 
 console.log('Listening on port', port);
 net.createServer( function ( socket ) {
-    socket.write( logo );
-    socket.write( ps1 );
-    socket.on( 'data', recv.bind( null, socket ) );
+	logoP.then( function( logo ) {
+		socket.write( logo );
+		socket.write( ps1 );
+		socket.on( 'data', recv.bind( null, socket ) );
+	} );
 } ).listen( port );

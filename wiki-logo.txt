@@ -20,5 +20,6 @@
                       |_|_| | | \_ | |    |___ |__/ | |  |
                              The Free Encyclopedia
 
-Type "use xx.wikipedia.org" to switch wikipedias.
+Type an article name to read an article.
+Type "use xx.wikipedia.org" to switch projects.
 Type "quit" to exit.

@@ -21,6 +21,6 @@
   "license": "AGPL-3.0",
   "homepage": "https://github.com/cscott/wikipedia-telnet",
   "dependencies": {
-    "mw-ocg-texter": "^0.3.1"
+    "mw-ocg-texter": "^0.3.2"
   }
 }
