@@ -3,14 +3,15 @@
 // To install dependencies:
 // npm install mw-ocg-texter
 
-var net = require( 'net' );
 var fs = require('fs');
+var net = require( 'net' );
+var path = require( 'path' );
 
 var texter = require('mw-ocg-texter/lib/standalone');
 
 var port = 1081;
 // Logo from https://en.wikipedia.org/wiki/ASCII_art, plus some instructions.
-var logo = fs.readFileSync( 'wiki-logo.txt' );
+var logo = fs.readFileSync( path.join( __dirname, 'wiki-logo.txt' ) );
 var domain = 'en.wikipedia.org';
 var ps1 = '\n\n>>> ';
 
