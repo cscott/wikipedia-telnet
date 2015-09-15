@@ -1,6 +1,6 @@
 {
   "name": "wikipedia-telnet",
-  "version": "0.0.2",
+  "version": "0.0.2-git",
   "description": "Wikipedia Telnet Server",
   "main": "index.js",
   "bin": {
