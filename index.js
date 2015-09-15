@@ -15,7 +15,7 @@ var port = parseInt(process.argv[2]) || 1081;
 // Logo from https://en.wikipedia.org/wiki/ASCII_art, plus some instructions.
 var logo = fs.readFileSync( path.join( __dirname, 'wiki-logo.txt' ) );
 var domain = 'en.wikipedia.org';
-var ps1 = '\n\n>>> ';
+var ps1 = '\n>>> ';
 
 // Cache siteinfo requests for some extra efficiency.
 var cachedSiteinfo = Object.create(null);
