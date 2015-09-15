@@ -20,5 +20,5 @@
                       |_|_| | | \_ | |    |___ |__/ | |  |
                              The Free Encyclopedia
 
-Use "host xx.wikipedia.org" to switch wikipedias.
+Type "use xx.wikipedia.org" to switch wikipedias.
 Type "quit" to exit.

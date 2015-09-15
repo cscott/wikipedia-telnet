@@ -34,8 +34,9 @@ function recv( socket, data ) {
 
     data = data.toString().replace( /(\r\n?|\n)/gm, '' );
 
-	if ( /^host (.*\.org)$/.test( data ) ) {
-		domain = data.slice( 5 );
+	var m = /^(host|use)\s+(\S+\.org)\s*$/i.exec( data );
+	if (m) {
+		domain = m[2];
 		socket.write( 'Using '+domain+' for future articles.\n' );
 		socket.write( ps1 );
 		return;
