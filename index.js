@@ -53,8 +53,7 @@ var logoP = (function() {
 });
 
 function recv( socket, data ) {
-
-    data = data.toString().replace( /(\r\n?|\n)/gm, '' );
+	data = data.toString().replace( /(\r\n?|\n)/gm, '' );
 
 	var m = /^(host|use)\s+(\S+\.org)\s*$/i.exec( data );
 	if (m) {
@@ -64,10 +63,10 @@ function recv( socket, data ) {
 		return;
 	}
 
-    if ( data === 'quit' ) {
-        socket.end( 'Bye!\n' );
-        return;
-    }
+	if ( data === 'quit' ) {
+		socket.end( 'Bye!\n' );
+		return;
+	}
 
 	texter.convert({
 		domain: domain,
