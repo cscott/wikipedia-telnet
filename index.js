@@ -53,7 +53,26 @@ var logoP = (function() {
 });
 
 function recv(socket, data) {
-	data = data.toString().replace(/(\r\n?|\n)/gm, '').trim();
+	data = data.toString();
+	if (data.charCodeAt(0) === 255) {
+		// 255 is a telnet control char.
+		data = data.slice(1);
+		switch (data.charCodeAt(0)) {
+			case 255: // byte value 255
+				break;
+			case 246: // Are you there?
+				socket.write('Still around! What do you want to read next?\n');
+				socket.write(ps1);
+				return;
+			case 241: // NOP
+			default:
+				// Ignore the rest
+				socket.write(ps1);
+				return;
+		}
+	}
+
+	data = data.replace(/(\r\n?|\n)/gm, '').trim();
 
 	var m = /^(host|use)\s+(\S+\.org)\s*$/i.exec(data);
 	if (m) {
