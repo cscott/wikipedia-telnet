@@ -95,7 +95,7 @@ function recv(socket, data) {
 		// by eliminating an unnecessary action API request for each article
 		siteinfo: siteinfoCacher,
 	}).catch(function(e) {
-		socket.write('Sorry! Could not find "' + data + '" for you.\nNo worries. There are lots of other pages to read.\nPick a different title.\n');
+		socket.write('Sorry! Could not fetch "' + data + '" for you.\nNo worries. There are lots of other pages to read.\nPick a different title.\n');
 	}).then(function() { socket.write(ps1); });
 }
 
