@@ -32,25 +32,31 @@ var siteinfoCacher = function(bundler, wikis, log) {
 // Attempt to render welcome message from :en:User:cscott/Telnet,
 // but fall back to the contents of wiki-logo.txt if there is a
 // problem.
-var logoP = (function() {
-	var cachedLogo = '';
-	return texter.convert({
-		domain: 'en.wikipedia.org',
-		title: 'User:cscott/Telnet',
-		siteinfo: siteinfoCacher,
-		stream: {
-			write: function(chunk, cb) {
-				cachedLogo += chunk.toString();
-				return cb();
+var getLogoP = function() {
+	return (function() {
+		console.log('Fetching logo...');
+		var cachedLogo = '';
+		return texter.convert({
+			domain: 'en.wikipedia.org',
+			title: 'User:cscott/Telnet',
+			siteinfo: siteinfoCacher,
+			stream: {
+				write: function(chunk, cb) {
+					cachedLogo += chunk.toString();
+					return cb();
+				}
 			}
-		}
-	}).then(function() {
-		// Remove initial "title" line from output.
-		return cachedLogo.replace(/^\S+[\n\r]+/, '');
+		}).then(function() {
+			// Remove initial "title" line from output.
+			return cachedLogo.replace(/^\S+[\n\r]+/, '');
+		});
+	})().catch(function() {
+		return fs.readFileSync(path.join(__dirname, 'wiki-logo.txt'));
 	});
-})().catch(function() {
-	return fs.readFileSync(path.join(__dirname, 'wiki-logo.txt'));
-});
+};
+var logoP = getLogoP();
+// Refresh this every six hours.
+setInterval(function() { logoP = getLogoP(); }, 6*60*60*1000 );
 
 function recv(socket, data) {
 	data = data.toString();
