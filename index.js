@@ -53,7 +53,7 @@ var logoP = (function() {
 });
 
 function recv(socket, data) {
-	data = data.toString().replace(/(\r\n?|\n)/gm, '');
+	data = data.toString().replace(/(\r\n?|\n)/gm, '').trim();
 
 	var m = /^(host|use)\s+(\S+\.org)\s*$/i.exec(data);
 	if (m) {
