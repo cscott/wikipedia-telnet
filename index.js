@@ -93,7 +93,13 @@ var tabCompleteQuery = function(domain, search_term) {
 			}
 			return resolve(body);
 		});
-	}).then(function(body) { return JSON.parse(body); });
+	}).then(function(body) {
+		var result = JSON.parse(body);
+		if (!result || result.error) {
+			throw new Error(result.error.info || "Bad request");
+		}
+		return result;
+	});
 };
 
 function completer(linePartial, callback) {
@@ -102,7 +108,9 @@ function completer(linePartial, callback) {
 		return c.slice(0, linePartial.length) === linePartial;
 	});
 	// Also do an API query with the title suggester:
-	//return callback(null,  [hits.length ? hits : basicCmds, linePartial]);
+	if (linePartial === '') {
+		return callback(null,  [hits.length ? hits : basicCmds, linePartial]);
+	}
 	tabCompleteQuery(domain, linePartial).then(function(resp) {
 		var result = [];
 		Object.keys(resp.query.pages).forEach(function(pageid) {
