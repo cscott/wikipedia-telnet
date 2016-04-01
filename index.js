@@ -103,7 +103,7 @@ var tabCompleteQuery = function(domain, search_term) {
 };
 
 function completer(linePartial, callback) {
-	var basicCmds = 'quit|use en.wikipedia.org|use es.wikipedia.org|use ja.wikipedia.org|use de.wikipedia.org|use ru.wikipedia.org|use fr.wikipedia.org|use it.wikipedia.org|use pt.wikipedia.org|use zh.wikipedia.org|use pl.wikipedia.org'.split('|');
+	var basicCmds = ':quit|:use en.wikipedia.org|:use es.wikipedia.org|:use ja.wikipedia.org|:use de.wikipedia.org|:use ru.wikipedia.org|:use fr.wikipedia.org|:use it.wikipedia.org|:use pt.wikipedia.org|:use zh.wikipedia.org|:use pl.wikipedia.org'.split('|');
 	var hits = basicCmds.filter(function(c) {
 		return c.slice(0, linePartial.length) === linePartial;
 	});
@@ -143,7 +143,7 @@ function recv(rl, client, line) {
 	rl.pause();
 	line = line.trim();
 
-	var m = /^(host|use)\s+(\S+\.org)$/i.exec(line);
+	var m = /^:(host|use)\s+(\S+\.org)$/i.exec(line);
 	if (m) {
 		this.domain = m[2];
 		client.write('Using '+this.domain+' for future articles.\n');
@@ -151,7 +151,7 @@ function recv(rl, client, line) {
 		return;
 	}
 
-	if (line === 'quit') {
+	if (line === ':quit') {
 		client.write('Bye!\n');
 		rl.close();
 		return;
