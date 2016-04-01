@@ -20,6 +20,7 @@ var port = parseInt(process.argv[2]) || 1081;
 
 var domain = 'en.wikipedia.org';
 var separator = '\x1b[46;1m\x1b[K\n\x1b[44;1m\x1b[K\n\x1b[39;49m\x1b[K';
+separator = '\n'; // Fancy separator seems to have some boldface issues.
 var ps1 = '>>> ';
 
 // Cache siteinfo requests for some extra efficiency.
