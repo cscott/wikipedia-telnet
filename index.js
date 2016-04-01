@@ -124,6 +124,22 @@ function completer(linePartial, callback) {
 	});
 }
 
+// This is a hack, it doesn't really do full Unicode normalization.  Oh, well.
+function normalizeCase(str) {
+	str = str.replace(/^\s+|\s+$/g, ''); // trim
+	str = str.toLowerCase();
+	// remove accents, swap ñ for n, etc
+	var from = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;";
+	var to   = "aaaaeeeeiiiioooouuuunc------";
+	for (var i=0, l=from.length ; i<l ; i++) {
+		str = str.replace(from.charAt(i), to.charAt(i));
+	}
+	str = str
+		.replace(/\s+/g, '-') // collapse whitespace and replace by -
+		.replace(/-+/g, '-'); // collapse dashes
+	return str;
+}
+
 function recv(rl, client, line) {
 	rl.pause();
 	line = line.trim();
@@ -150,9 +166,30 @@ function recv(rl, client, line) {
 		// by eliminating an unnecessary action API request for each article
 		siteinfo: siteinfoCacher,
 	}).catch(function(e) {
-		client.write('Sorry! Could not fetch "' + line + '" for you.\n' +
-					 'No worries. There are lots of other pages to read.\n' +
-					 'Pick a different title.\n');
+		// Before failing, see if case differences could account for the
+		// failure.
+		return tabCompleteQuery(domain, line).then(function(resp) {
+			var best = null, bestIndex = 0, target = normalizeCase(line);
+			Object.keys(resp.query.pages).forEach(function(pageid) {
+				var page = resp.query.pages[pageid];
+				if (best === null || bestIndex > page.index) {
+					if (target === normalizeCase(page.title)) {
+						best = page.title; bestIndex = page.index;
+					}
+				}
+			});
+			if (!best) { throw e; }
+			return texter.convert({
+				domain: domain,
+				title: best,
+				stream: client,
+				siteinfo: siteinfoCacher
+			});
+		}).catch(function(e) {
+			client.write('Sorry! Could not fetch "' + line + '" for you.\n' +
+						 'No worries. There are lots of other pages to read.\n' +
+						 'Pick a different title.\n');
+		});
 	}).then(function() {
 		client.write(separator);
 		rl.prompt();
