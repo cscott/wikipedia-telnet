@@ -18,7 +18,6 @@ var texter = require('mw-ocg-texter/lib/standalone');
 
 var port = parseInt(process.argv[2]) || 1081;
 
-var domain = 'en.wikipedia.org';
 var separator = '\x1b[46;1m\x1b[K\n\x1b[44;1m\x1b[K\n\x1b[39;49m\x1b[K';
 separator = '\n'; // Fancy separator seems to have some boldface issues.
 var ps1 = '>>> ';
@@ -112,7 +111,7 @@ function completer(linePartial, callback) {
 	if (linePartial === '') {
 		return callback(null,  [hits.length ? hits : basicCmds, linePartial]);
 	}
-	tabCompleteQuery(domain, linePartial).then(function(resp) {
+	tabCompleteQuery(this.domain, linePartial).then(function(resp) {
 		var result = [];
 		Object.keys(resp.query.pages).forEach(function(pageid) {
 			var page = resp.query.pages[pageid];
@@ -146,8 +145,8 @@ function recv(rl, client, line) {
 
 	var m = /^(host|use)\s+(\S+\.org)$/i.exec(line);
 	if (m) {
-		domain = m[2];
-		client.write('Using '+domain+' for future articles.\n');
+		this.domain = m[2];
+		client.write('Using '+this.domain+' for future articles.\n');
 		rl.prompt();
 		return;
 	}
@@ -159,7 +158,7 @@ function recv(rl, client, line) {
 	}
 
 	texter.convert({
-		domain: domain,
+		domain: this.domain,
 		title: line,
 		stream: client,
 		// siteinfo cacher is optional, but it speeds things up
@@ -168,7 +167,7 @@ function recv(rl, client, line) {
 	}).catch(function(e) {
 		// Before failing, see if case differences could account for the
 		// failure.
-		return tabCompleteQuery(domain, line).then(function(resp) {
+		return tabCompleteQuery(this.domain, line).then(function(resp) {
 			var best = null, bestIndex = 0, target = normalizeCase(line);
 			Object.keys(resp.query.pages).forEach(function(pageid) {
 				var page = resp.query.pages[pageid];
@@ -180,7 +179,7 @@ function recv(rl, client, line) {
 			});
 			if (!best) { throw e; }
 			return texter.convert({
-				domain: domain,
+				domain: this.domain,
 				title: best,
 				stream: client,
 				siteinfo: siteinfoCacher
@@ -197,6 +196,10 @@ function recv(rl, client, line) {
 }
 
 var server = telnet.createServer(function (client) {
+	// some state:
+	var state = {
+		domain: 'en.wikipedia.org'
+	};
 	client.on('window size', function(e) {
 		if (e.command === 'sb') {
 			// A real "resize" event; readline listens for this.
@@ -217,7 +220,7 @@ var server = telnet.createServer(function (client) {
 		input: client,
 		output: client,
 		terminal: true,
-		completer: completer
+		completer: completer.bind(state)
 	});
 	rl.setPrompt(ps1); rl.pause();
 	rl.on('close', function() { client.end(); });
@@ -225,7 +228,7 @@ var server = telnet.createServer(function (client) {
 	logoP.then(function(logo) {
 		client.write(logo);
 		rl.prompt();
-		rl.on('line', recv.bind(null, rl, client));
+		rl.on('line', recv.bind(state, rl, client));
 	} );
 });
 
