@@ -19,7 +19,8 @@ var texter = require('mw-ocg-texter/lib/standalone');
 var port = parseInt(process.argv[2]) || 1081;
 
 var domain = 'en.wikipedia.org';
-var ps1 = '\n>>> ';
+var separator = '\x1b[46;1m\x1b[K\n\x1b[44;1m\x1b[K\n\x1b[39;49m\x1b[K';
+var ps1 = '>>> ';
 
 // Cache siteinfo requests for some extra efficiency.
 var cachedSiteinfo = Object.create(null);
@@ -143,7 +144,10 @@ function recv(rl, client, line) {
 		client.write('Sorry! Could not fetch "' + line + '" for you.\n' +
 					 'No worries. There are lots of other pages to read.\n' +
 					 'Pick a different title.\n');
-	}).then(function() { rl.prompt(); });
+	}).then(function() {
+		client.write(separator);
+		rl.prompt();
+	});
 }
 
 var server = telnet.createServer(function (client) {
