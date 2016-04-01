@@ -5,9 +5,13 @@
 // To install dependencies:
 // npm install mw-ocg-texter
 
+var Promise = require('babybird');
+
 var fs = require('fs');
 var path = require('path');
+var querystring = require('querystring');
 var readline = require('readline');
+var request = require('request');
 var telnet = require('telnet');
 
 var texter = require('mw-ocg-texter/lib/standalone');
@@ -59,10 +63,55 @@ var logoP = getLogoP();
 // Refresh this every six hours.
 setInterval(function() { logoP = getLogoP(); }, 6*60*60*1000 );
 
-function completer(line) {
-	var completions = 'quit|use en.wikipedia.org|use es.wikipedia.org|use ja.wikipedia.org|use de.wikipedia.org|use ru.wikipedia.org|use fr.wikipedia.org|use it.wikipedia.org|use pt.wikipedia.org|use zh.wikipedia.org|use pl.wikipedia.org'.split('|');
-	var hits = completions.filter(function(c) { return c.indexOf(line) == 0; });
-	return [hits.length ? hits : completions, line];
+var tabCompleteQuery = function(domain, search_term) {
+	var apiURL = 'https://' + domain + '/w/api.php';
+	var queryobj = {
+		action: 'query',
+		format: 'json',
+		prop: 'pageprops',
+		generator: 'prefixsearch',
+		ppprop: 'displaytitle',
+		gpssearch: search_term,
+		gpsnamespace: 0,
+		gpslimit: 6
+	};
+	apiURL += '?' + querystring.stringify(queryobj);
+	var user = process.env.USER || process.env.LOGNAME || process.env.HOME ||
+		'unknown';
+	return new Promise(function(resolve, reject) {
+		request({
+			url: apiURL,
+			encoding: 'utf8',
+			headers: {
+				'User-Agent': 'wikipedia-telnet/1.0.0/' + user
+			},
+			pool: false
+		}, function(error, response, body) {
+			if (error || response.statusCode !== 200) {
+				return reject(error || new Error("Unexpected HTTP status: " + response.statusCode));
+			}
+			return resolve(body);
+		});
+	}).then(function(body) { return JSON.parse(body); });
+};
+
+function completer(linePartial, callback) {
+	var basicCmds = 'quit|use en.wikipedia.org|use es.wikipedia.org|use ja.wikipedia.org|use de.wikipedia.org|use ru.wikipedia.org|use fr.wikipedia.org|use it.wikipedia.org|use pt.wikipedia.org|use zh.wikipedia.org|use pl.wikipedia.org'.split('|');
+	var hits = basicCmds.filter(function(c) {
+		return c.slice(0, linePartial.length) === linePartial;
+	});
+	// Also do an API query with the title suggester:
+	//return callback(null,  [hits.length ? hits : basicCmds, linePartial]);
+	tabCompleteQuery(domain, linePartial).then(function(resp) {
+		var result = [];
+		Object.keys(resp.query.pages).forEach(function(pageid) {
+			var page = resp.query.pages[pageid];
+			result[page.index - 1] = page.title;
+		});
+		hits = hits.concat(result);
+	}, function(e) { /* some error occurred, ignore it. */ }).then(function() {
+		callback(null, [hits.length ? hits : basicCmds, linePartial]);
+	});
 }
 
 function recv(rl, client, line) {
