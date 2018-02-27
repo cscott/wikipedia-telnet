@@ -25,6 +25,6 @@
     "mw-ocg-bundler": "^1.3.1",
     "mw-ocg-texter": "^0.3.3",
     "request": "^2.69.0",
-    "telnet": "0.0.1"
+    "telnet": "git+https://github.com/TooTallNate/node-telnet.git#780340617e1f223de384cdfcb7cecf0a1a6f1159"
   }
 }
