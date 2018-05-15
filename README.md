@@ -12,6 +12,16 @@ of Wikipedia content, via the Wikipedia REST API.
 
 Based on the gist by [Ori Livneh] at https://gist.github.com/atdt/4037228
 
+See https://meta.wikimedia.org/wiki/Telnet_gateway for more information.
+
+## Usage
+
+A live instance of this server is available at Wikimedia Tool Labs. To connect to it, run
+
+```
+telnet telnet.wmflabs.org
+```
+
 ## Installation
 To install the binary, use:
 ```
