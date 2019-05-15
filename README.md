@@ -1,5 +1,5 @@
 # Wikipedia Telnet Server
-[![NPM][NPM1]][NPM2]
+[![npm banner][npm-banner-image]][npm-package-link]
 
 Sometime, browsing over http/https is just too insecure.
 For those times when you must absolutely guarantee no executable code
@@ -201,5 +201,5 @@ Licensed under AGPLv3.
 [telnet]:        https://en.wikipedia.org/wiki/Telnet
 [Ori Livneh]:    https://github.com/atdt/
 
-[NPM1]: https://nodei.co/npm/wikipedia-telnet.png
-[NPM2]: https://nodei.co/npm/wikipedia-telnet/
+[npm-banner-image]: https://nodei.co/npm/wikipedia-telnet.png
+[npm-package-link]: https://www.npmjs.com/package/wikipedia-telnet
